@@ -1,0 +1,255 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWAS DATABASE LU ILANG</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #020805;
+    color: #00ff66;
+    font-family: "Courier New", monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Background Matrix */
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    opacity: 0.25;
+}
+
+.container {
+    width: 90%;
+    max-width: 900px;
+    margin: 70px auto;
+    border: 1px solid #00ff66;
+    box-shadow: 0 0 25px #00ff6655;
+    background: rgba(0, 10, 5, 0.92);
+}
+
+.header {
+    padding: 20px;
+    border-bottom: 1px solid #00ff66;
+    background: #001a0a;
+}
+
+.header h1 {
+    text-align: center;
+    text-shadow: 0 0 15px #00ff66;
+    letter-spacing: 5px;
+}
+
+.status {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #55ff99;
+}
+
+.terminal {
+    padding: 25px;
+    min-height: 300px;
+    line-height: 1.8;
+}
+
+.line {
+    margin-bottom: 8px;
+}
+
+.green {
+    color: #00ff66;
+}
+
+.white {
+    color: white;
+}
+
+.red {
+    color: #ff3333;
+}
+
+.input-area {
+    display: flex;
+    padding: 15px;
+    border-top: 1px solid #00ff66;
+}
+
+.input-area span {
+    margin-right: 10px;
+}
+
+input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #00ff66;
+    font-family: inherit;
+    font-size: 16px;
+}
+
+button {
+    background: transparent;
+    color: #00ff66;
+    border: 1px solid #00ff66;
+    padding: 8px 18px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+button:hover {
+    background: #00ff66;
+    color: black;
+    box-shadow: 0 0 15px #00ff66;
+}
+
+.footer {
+    text-align: center;
+    padding: 15px;
+    font-size: 11px;
+    border-top: 1px solid #003311;
+    color: #448866;
+}
+
+.cursor {
+    animation: blink 0.8s infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div class="container">
+
+    <div class="header">
+        <h1>☠ WEBSITE IKYYYYYY ☠</h1>
+        <div class="status">
+            SYSTEM STATUS: ONLINE | ENCRYPTION: ACTIVE
+        </div>
+    </div>
+
+    <div class="terminal" id="terminal">
+        <div class="line green">[ SYSTEM ] Initializing terminal...</div>
+        <div class="line green">[ SYSTEM ] Loading cyber interface...</div>
+        <div class="line white">[ OK ] Connection established.</div>
+        <div class="line white">[ OK ] Security protocols active.</div>
+        <div class="line red">[ WARNING ] Unauthorized access prohibited.</div>
+        <br>
+        <div class="line green">Welcome to Hacker Terminal.</div>
+        <div class="line">Ketik <span class="white">help</span> untuk melihat perintah.</div>
+    </div>
+
+    <div class="input-area">
+        <span>root@hacker:~$</span>
+        <input id="command" placeholder="Masukkan perintah..." autofocus>
+        <button onclick="runCommand()">EXECUTE</button>
+    </div>
+
+    <div class="footer">
+        CYBER SECURITY TERMINAL | EDUCATIONAL DEMO
+    </div>
+
+</div>
+
+<script>
+// Terminal Commands
+function runCommand() {
+    const input = document.getElementById("command");
+    const terminal = document.getElementById("terminal");
+    const cmd = input.value.trim().toLowerCase();
+
+    if (!cmd) return;
+
+    const line = document.createElement("div");
+    line.className = "line";
+    line.innerHTML = '<span class="white">root@hacker:~$ </span>' +
+        document.createTextNode(cmd).textContent;
+
+    terminal.appendChild(line);
+
+    const output = document.createElement("div");
+    output.className = "line green";
+
+    const commands = {
+        help: "Commands: help, about, status, scan, clear, date",
+        about: "Cyber Terminal v1.0 - Educational Interface",
+        status: "SYSTEM ONLINE | CPU: 12% | RAM: 45% | SECURITY: ACTIVE",
+        scan: "Starting simulated network scan... DONE. No real network scanned.",
+        date: new Date().toLocaleString("id-ID")
+    };
+
+    if (cmd === "clear") {
+        terminal.innerHTML = "";
+    } else {
+        output.textContent = commands[cmd] || "Command not found. Type 'help'.";
+        terminal.appendChild(output);
+    }
+
+    input.value = "";
+    terminal.scrollTop = terminal.scrollHeight;
+}
+
+document.getElementById("command").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") runCommand();
+});
+
+// Matrix Animation
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const chars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const fontSize = 14;
+let drops = Array(Math.floor(canvas.width / fontSize)).fill(1);
+
+function drawMatrix() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#00ff66";
+    ctx.font = fontSize + "px monospace";
+
+    drops.forEach((y, i) => {
+        const char = chars[Math.floor(Math.random() * chars.length)];
+
+        ctx.fillText(char, i * fontSize, y * fontSize);
+
+        if (y * fontSize > canvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+        }
+
+        drops[i]++;
+    });
+}
+
+setInterval(drawMatrix, 40);
+
+window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    drops = Array(Math.floor(canvas.width / fontSize)).fill(1);
+});
+</script>
+
+</body>
+</html>
